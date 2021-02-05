@@ -1,0 +1,11 @@
+@media screen and (min-width: 768px) {
+  .h-md-100vh {
+    height: 100vh;
+  }
+  .bg-md-secondary {
+    background-color: #434343 !important;
+  }
+  .title {
+    transform: rotate(-90deg) translateX(50%);
+  }
+}
