@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import './styles.css'
 
-const CountDown = () => {
-  const [defaulTime] = useState(20);
-  const [time, setTime] = useState(20);
+const CountDown = (props) => {
+  const [defaulTime] = useState(60);
+  const [time, setTime] = useState(60);
   let [circleDasharray, setCircleDasharray] = useState(`283 283`)
   const [timerStatus, setTimerStatus] = useState(false);
+  const [canRest, setCanRest] = useState(false);
   const timeRef = useRef({});
 
   useEffect(() => {
@@ -13,12 +14,19 @@ const CountDown = () => {
       (time / defaulTime) * 283
     ).toFixed(2)} 283`);
     if (time === 0) {
+      props.complete(props.nowItem.id);
+      setCanRest(true);
       timePause();
-      // backTimeStop();
+      resetTime();
     }
-  }, [time, defaulTime]);
+  }, [time, defaulTime, props]);
 
-  const timeStart = () => {
+  const timeStart = (e) => {
+    e.preventDefault();
+    if (props.nowItem.id === 0) {
+      alert('請先選擇一個待辦事項');
+      return;
+    }
     if (timerStatus === true || time === 0) {
       return;
     }
@@ -35,20 +43,31 @@ const CountDown = () => {
     }`;
   }, [time]);
 
-  // const backTimeStop = () => {
-  //   setTimerStatus(false);
-  //   clearInterval(timeRef.current);
-  //   setCircleDasharray(`283 283`)
-  //   setTime(20);
-  // };
+  const reStart = (e) => {
+    e.preventDefault();
+    setCanRest(false);
+    props.reStart();
+  }
+
+  const resetTime = () => {
+    setTimerStatus(false);
+    clearInterval(timeRef.current);
+    setCircleDasharray(`283 283`)
+    setTime(60);
+  };
   const timePause = () => {
     setTimerStatus(false);
     clearInterval(timeRef.current);
   };
 
+  useEffect(() => {
+    resetTime();
+  }, [props.nowItem.id]);
+
   return (
     <div class="h-100">
-      <div className="d-flex align-items-center justify-content-center h-100">
+      <div className="d-flex flex-column align-items-center justify-content-center h-100">
+        <h4 className="mb-md-5 mb-3 text-primary text-decoration-underline"> {props.nowItem.text} </h4>
         <div className="base-timer">
           <svg className="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <g className="base-timer__circle">
@@ -66,12 +85,22 @@ const CountDown = () => {
               ></path>
             </g>
           </svg>
-          <span id="base-timer-label" className="base-timer__label">
-            {timerStatus?
-              <p> {displayConvert} </p>:
-              <a href="javascript:;" onClick={timeStart}><i class="far fa-play-circle"></i></a>
+          <p id="base-timer-label" className="base-timer__label">
+            {canRest?
+              <div className="rest-text">
+                <p className="text-white"> 完成 {props.nowItem.text} ！<br/> 休息 5 分鐘後再繼續努力 <i class="far fa-smile"></i> </p>
+                <a href="/" onClick={reStart}><i class="fas fa-history"></i></a>
+              </div>
+              : 
+              <div className="time-text">
+                {timerStatus?
+                  <p> {displayConvert} </p>:
+                  <a href="/" onClick={timeStart}><i class="far fa-play-circle"></i></a>
+                }
+              </div>
             }
-          </span>
+
+          </p>
         </div>
       </div>
     </div>

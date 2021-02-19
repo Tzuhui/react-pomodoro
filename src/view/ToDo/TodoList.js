@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import Todo from '../../components/Todo/Todo';
 
-const TodoList = () => {
+const TodoList = (props) => {
+  const todos = props.todos;
   const [filterType, setFilterType] = useState('all');
 
   const [inputValue, setInputValue] = useState('');
@@ -9,33 +10,19 @@ const TodoList = () => {
     setInputValue(event.target.value);
   }
 
-  const [todos, setTodos] = useState([
-    { id: 1, text: 'Write Some Code', active: false },
-    { id: 2, text: 'Running', active: false },
-    { id: 3, text: 'Play Baskebtall', active: false },
-  ])
-
+  function checkActiveItem(event) {
+    const target = event.target.nodeName;
+    if (target === 'BUTTON' || target === 'I') {
+      props.onStartCount(event.target.dataset.id);
+    }
+  }
   function addTodo() {
     if (inputValue !== '') {
-      const todoLength = todos.length;
-      setTodos([...todos, {
-        id: todoLength + 1,
-        text: inputValue,
-        active: false
-      }])
+      props.onAddTodoItem(inputValue);
       setInputValue('');
     }
   }
-  function changeState(event) {
-    let todosList = todos;
-    const index = todos.findIndex(data => data.id === parseInt(event.target.id));
-    if (todosList[index].active) {
-      todosList[index].active = false
-    } else {
-      todosList[index].active = true
-    }
-    setTodos([...todosList]);
-  }
+
   const displayData = useMemo(() => {
     if (filterType !== 'all') {
       if (filterType === 'completed') {
@@ -66,9 +53,9 @@ const TodoList = () => {
           className={'btn btn-outline-primary ' + (filterType === "completed" ? "active" : "")}
           onClick={() => setFilterType('completed')}>完成</button>
       </div>
-      <ul className="list-group">
+      <ul className="list-group" onClick={checkActiveItem}>
         {displayData.map((value, key) => {
-          return <Todo data={value} id={value.id} key={key} handler={changeState} />
+          return <Todo data={value} id={value.id} key={key} handler={props.onStateChange} active={props.nowItem.id === value.id} />
         })}
       </ul>
       <p className="mt-3 text-primary text-right"> 共有 {todos.length} 項任務</p>

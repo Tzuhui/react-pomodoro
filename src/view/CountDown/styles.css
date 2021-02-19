@@ -1,54 +1,78 @@
 
 /* Sets the containers height and width */
 .base-timer {
+  position: relative;
+  width: 100%;
+}
+
+/* Removes SVG styling that would hide the time label */
+.base-timer__circle {
+  fill: none;
+  stroke: none;
+}
+
+/* The SVG path that displays the timer's progress */
+.base-timer__path-elapsed {
+  stroke-width: 4px;
+  stroke: #2D2C2C;
+}
+.base-timer__label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform:  translate(-50%, -50%);
+  font-weight: bold;
+  color: #F5A623;
+}
+.base-timer__label .rest-text {
+  font-size: 20px;
+  white-space: nowrap;
+  text-align: center;
+}
+.base-timer__label .rest-text .fa-history {
+  font-size: 60px;
+}
+.base-timer__label .time-text {
+  font-size: 32px;
+}
+@media screen and (min-width: 568px) {
+  .base-timer {
     position: relative;
     width: 70%;
   }
-  
-  /* Removes SVG styling that would hide the time label */
-  .base-timer__circle {
-    fill: none;
-    stroke: none;
+}
+@media screen and (min-width: 768px) {
+  .base-timer__label .time-text{
+      font-size: 78px;
   }
-  
-  /* The SVG path that displays the timer's progress */
-  .base-timer__path-elapsed {
-    stroke-width: 4px;
-    stroke: #2D2C2C;
+  .base-timer__label .rest-text {
+    font-size: 24px;
+    white-space: nowrap;
+    text-align: center;
   }
-  .base-timer__label {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform:  translate(-50%, -50%);
-    font-size: 48px;
-    font-weight: bold;
-    color: #F5A623;
+  .base-timer__label .rest-text .fa-history {
+    font-size: 60px;
   }
-  @media screen and (min-width: 768px) {
-    .base-timer__label {
-        font-size: 78px;
-    }
-  }
-  .base-timer__path-remaining {
-    /* Just as thick as the original ring */
-    stroke-width: 4px;
-  
-    /* Rounds the line endings to create a seamless circle */
-    stroke-linecap: round;
-  
-    /* Makes sure the animation starts at the top of the circle */
-    transform: rotate(90deg);
-    transform-origin: center;
-  
-    /* One second aligns with the speed of the countdown timer */
-    transition: 1s linear all;
-  
-    /* Allows the ring to change color when the color value updates */
-    stroke: currentColor;
-  }
-  
-  .base-timer__svg {
-    /* Flips the svg and makes the animation to move left-to-right */
-    transform: scaleX(-1);
-  }
+}
+.base-timer__path-remaining {
+  /* Just as thick as the original ring */
+  stroke-width: 4px;
+
+  /* Rounds the line endings to create a seamless circle */
+  stroke-linecap: round;
+
+  /* Makes sure the animation starts at the top of the circle */
+  transform: rotate(90deg);
+  transform-origin: center;
+
+  /* One second aligns with the speed of the countdown timer */
+  transition: 1s linear all;
+
+  /* Allows the ring to change color when the color value updates */
+  stroke: currentColor;
+}
+
+.base-timer__svg {
+  /* Flips the svg and makes the animation to move left-to-right */
+  transform: scaleX(-1);
+}
